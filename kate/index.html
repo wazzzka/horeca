@@ -15,19 +15,7 @@
     <script src="js/main.js" defer></script>
 
 </head>
-<!-- Modal -->
-<div class="modal" id="cardModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"
-    aria-describedby="modalDesc" hidden>
-    <div class="modal__overlay" data-close-modal></div>
-    <div class="modal__content" role="document">
-        <button class="modal__close" type="button" aria-label="Закрити" data-close-modal>&times;</button>
-        <img class="modal__img" src="" alt="" />
-        <div class="modal__body">
-            <h3 id="modalTitle" class="modal__title"></h3>
-            <p id="modalDesc" class="modal__text"></p>
-        </div>
-    </div>
-</div>
+
 
 <body>
     <header>
@@ -64,10 +52,16 @@
         <h2>What we do</h2>
         <div class="cards">
             <div class="card">
-                <img src="./img/IMAGE (1).jpg" alt="img1">
-                <h3>Photography</h3>
-                <p>Capturing stunning moments with professional photography services.</p>
-                <button class="card-btn">Детальніше</button>
+                <img src="./img/image_card.png" alt="img1">
+                <h3>ОЦІНКА ПЕРСОНАЛУ РЕСТОРАНУ</h3>
+                <p>Команда - це завжди основа розвитку, масштабування ресторану. Якщо в закладі страждає сервіс,
+                    менеджмент, низька експертиза працівників - власники не доотримують прибуток. Розвитком персоналу
+                    важливо займатись, але ж з чого починати ? Рекомендуємо почати з розуміння на яких співробітниках
+                    тримається ваш заклад і як посилити це, які співробітники потребують розвитку, а з якими можливо
+                    варто і попрощатись. Оцінка персоналу 360 - дієвий інструмент.</p>
+                <button class="card-btn" data-img="./img/360.jpg" data-onlyimg="true">
+                    Детальніше
+                </button>
             </div>
             <div class="card">
                 <img src="./img/IMAGE (2).jpg" alt="img1">
@@ -203,7 +197,19 @@
             </div>
         </div>
     </footer>
-
+    <!-- Modal -->
+    <div class="modal" id="cardModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"
+        aria-describedby="modalDesc" hidden>
+        <div class="modal__overlay" data-close-modal></div>
+        <div class="modal__content" role="document">
+            <button class="modal__close" type="button" aria-label="Закрити" data-close-modal>&times;</button>
+            <img class="modal__img" src="" alt="" />
+            <div class="modal__body">
+                <h3 id="modalTitle" class="modal__title"></h3>
+                <div id="modalDesc" class="modal__text"></div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

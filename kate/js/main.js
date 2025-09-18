@@ -8,23 +8,46 @@ const closeBtns = modal.querySelectorAll('[data-close-modal], .modal__close');
 
 let lastFocusedBtn = null;
 
+
+// ДОДАНО: підтримка innerHTML і опційної CTA-кнопки
 function openModal({
     imgSrc,
     imgAlt,
     title,
-    desc
+    descText,
+    descHTML
 }) {
+    const isImageOnly = (!title && !descText && !descHTML);
+    // Клас для CSS-режиму лайтбокса
+    modal.classList.toggle('modal--image-only', isImageOnly);
+
     modalImg.src = imgSrc || '';
-    modalImg.alt = imgAlt || title || 'Image';
-    modalTitle.textContent = title || '';
-    modalDesc.textContent = desc || '';
+    modalImg.alt = imgAlt || '';
+
+    // Title
+    if (title) {
+        modalTitle.textContent = title;
+        modalTitle.style.display = '';
+    } else {
+        modalTitle.textContent = '';
+        modalTitle.style.display = 'none';
+    }
+
+    // Desc
+    if (descHTML) {
+        modalDesc.innerHTML = descHTML;
+        modalDesc.style.display = '';
+    } else if (descText) {
+        modalDesc.textContent = descText;
+        modalDesc.style.display = '';
+    } else {
+        modalDesc.innerHTML = '';
+        modalDesc.style.display = 'none';
+    }
 
     modal.hidden = false;
     document.body.classList.add('no-scroll');
-
-    const closeBtn = modal.querySelector('.modal__close');
-    setTimeout(() => closeBtn.focus(), 0);
-
+    setTimeout(() => modal.querySelector('.modal__close').focus(), 0);
     document.addEventListener('keydown', onKeydown);
 }
 
@@ -32,20 +55,13 @@ function closeModal() {
     modal.hidden = true;
     document.body.classList.remove('no-scroll');
     document.removeEventListener('keydown', onKeydown);
-
-    if (lastFocusedBtn && lastFocusedBtn.focus) {
-        lastFocusedBtn.focus();
-    }
+    if (lastFocusedBtn && lastFocusedBtn.focus) lastFocusedBtn.focus();
 }
 
 function onKeydown(e) {
-    if (e.key === 'Escape') closeModal();
-
-    // focus trap
+    if (e.key === 'Escape') return closeModal();
     if (e.key === 'Tab') {
-        const focusable = modal.querySelectorAll(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
+        const focusable = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
         const first = focusable[0];
         const last = focusable[focusable.length - 1];
         if (e.shiftKey && document.activeElement === first) {
@@ -62,7 +78,7 @@ function onKeydown(e) {
 overlay.addEventListener('click', closeModal);
 closeBtns.forEach(btn => btn.addEventListener('click', closeModal));
 
-// Відкриття з кнопок "Детальніше"
+// Відкриття
 document.addEventListener('click', (e) => {
     const btn = e.target.closest('.card-btn');
     if (!btn) return;
@@ -70,16 +86,52 @@ document.addEventListener('click', (e) => {
     const card = btn.closest('.card');
     if (!card) return;
 
-    const img = card.querySelector('img');
-    const titleEl = card.querySelector('h3');
-    const descEl = card.querySelector('p');
-
     lastFocusedBtn = btn;
 
+    const ds = btn.dataset;
+    const onlyImg = (ds.onlyimg === 'true' || ds.onlyimg === '1' || ds.onlyimg === '');
+
+    let title = ds.title || '';
+    let imgSrc = ds.img || '';
+    let descText = ds.desc || '';
+    let descHTML = '';
+
+    // Якщо вказано data-template і ми НЕ в режимі onlyImg — беремо HTML із шаблону
+    if (!onlyImg && ds.template) {
+        const tpl = document.getElementById(ds.template);
+        if (tpl) descHTML = tpl.innerHTML.trim();
+    }
+
+    // Якщо режим onlyImg → ВІДКЛЮЧАЄМО фолбеки з картки
+    if (!onlyImg) {
+        if (!title) {
+            const t = card.querySelector('h3');
+            title = t ? t.textContent.trim() : '';
+        }
+        if (!imgSrc) {
+            const img = card.querySelector('img');
+            imgSrc = img ? img.getAttribute('src') : '';
+        }
+        if (!descText && !descHTML) {
+            const p = card.querySelector('p');
+            descText = p ? p.textContent.trim() : '';
+        }
+    } else {
+        // режим тільки картинка: якщо шлях не заданий у data-img — беремо з img картки
+        if (!imgSrc) {
+            const img = card.querySelector('img');
+            imgSrc = img ? img.getAttribute('src') : '';
+        }
+        title = '';
+        descText = '';
+        descHTML = '';
+    }
+
     openModal({
-        imgSrc: img ? img.getAttribute('src') : '',
-        imgAlt: img ? img.getAttribute('alt') : '',
-        title: titleEl ? titleEl.textContent.trim() : '',
-        desc: descEl ? descEl.textContent.trim() : ''
+        imgSrc,
+        imgAlt: title, // або пусто, якщо хочеш
+        title,
+        descText,
+        descHTML
     });
 });

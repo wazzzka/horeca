@@ -17,7 +17,7 @@ button {
     font-weight: 400;
     color: #000;
     background-color: #fff;
-    size: 0.93rem;
+    font-size: 0.93rem;
 
 }
 
@@ -142,7 +142,7 @@ section img {
 
 .cards-section h2 {
     color: #fff;
-    font-size: 2.5 rem;
+    font-size: 2.5rem;
     font-weight: 400;
     padding-bottom: 40px;
     text-align: center;
@@ -313,7 +313,7 @@ footer {
     backdrop-filter: blur(2px);
 }
 
-.modal__content {
+/* .modal__content {
     position: relative;
     max-width: 920px;
     width: min(92vw, 920px);
@@ -324,6 +324,65 @@ footer {
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(0, 0, 0, .24);
     animation: modalIn .18s ease-out;
+} */
+.modal__content {
+    position: relative;
+    background: #151618;
+    /* або #fff, як у тебе */
+    color: #f8f8f8;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .24);
+    margin: 4svh auto;
+    padding: 0;
+    /* НЕ фіксуємо жорстку ширину — хай підлаштовується під зображення */
+    max-width: 96vw;
+    max-height: 92svh;
+    /* загальна рамка по висоті */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal__img {
+    display: block;
+    max-width: 96vw;
+    /* не ширше екрану */
+    max-height: 86svh;
+    /* запас під кнопку закриття та відступи */
+    width: auto;
+    /* ключ: НЕ 100% */
+    height: auto;
+    object-fit: contain;
+    /* усе зображення видно повністю */
+    background: #0f0f0f;
+    /* темний плейсхолдер, поки вантажиться */
+    border-radius: 12px;
+    margin: 24px;
+    /* відступи всередині модалки */
+}
+
+/* Режим “тільки зображення” (без заголовка/опису) — компактніший контейнер */
+.modal--image-only .modal__content {
+    background: transparent;
+    /* можна прибрати фон, якщо хочеш “lightbox” */
+    box-shadow: none;
+    margin: 2svh auto;
+}
+
+.modal--image-only .modal__img {
+    margin: 0;
+    /* без внутрішніх відступів */
+    max-width: 98vw;
+    max-height: 96svh;
+    border-radius: 0;
+}
+
+/* На дуже вузьких екранах трохи зменшуємо поля */
+@media (max-width: 480px) {
+    .modal__img {
+        margin: 12px;
+        max-height: 88svh;
+    }
 }
 
 @keyframes modalIn {
@@ -338,14 +397,7 @@ footer {
     }
 }
 
-.modal__img {
-    display: block;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16/9;
-    object-fit: cover;
-    background: #f2f2f2;
-}
+
 
 .modal__body {
     padding: 20px 22px 24px;
@@ -389,6 +441,11 @@ footer {
 /* Блокування скролу фону, коли модалка відкрита */
 .no-scroll {
     overflow: hidden;
+}
+
+.modal__title:empty,
+.modal__text:empty {
+    display: none;
 }
 
 /* Темна тема для модалки, якщо футер/сайт темний */
